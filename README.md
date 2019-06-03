@@ -1,4 +1,4 @@
 # Senet
 ****
 
-The ancient Egyptian board game Senet reconstruct in 3D using Unity.
+The ancient Egyptian board game Senet reconstructed in 3D using Unity.
