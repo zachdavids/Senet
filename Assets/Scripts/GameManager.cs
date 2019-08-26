@@ -13,20 +13,19 @@ public class GameManager : MonoBehaviour
     public PlayerManager[] m_Players = new PlayerManager[m_NumPlayers];
 
     private static int m_NumPlayers = 2;
-    private float m_StartDelay = 1.5f;
     private float m_EndDelay = 1.5f;
-    private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
     private PlayerManager m_GameWinner;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_StartWait = new WaitForSeconds(m_StartDelay);
-        m_EndWait = new WaitForSeconds(m_EndDelay);
         SpawnAllPawns();
         SpawnAllSticks();
+
         m_MoveManager.Setup();
+
+        m_EndWait = new WaitForSeconds(m_EndDelay);
         StartCoroutine(GameLoop());
     }
 
