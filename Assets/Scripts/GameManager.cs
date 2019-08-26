@@ -4,54 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(StickManager))]
+[RequireComponent(typeof(MoveManager))]
+[RequireComponent(typeof(PlayerManager))]
 public class GameManager : MonoBehaviour
 {
-    public GameObject m_PawnPrefab;
-    public GameObject m_StickPrefab;
-    public StickManager m_StickManager;
-    public MoveManager m_MoveManager = new MoveManager();
-    public PlayerManager[] m_Players = new PlayerManager[m_NumPlayers];
+    #region Attributes
 
-    private static int m_NumPlayers = 2;
-    private float m_EndDelay = 1.5f;
-    private WaitForSeconds m_EndWait;
-    private PlayerManager m_GameWinner;
+    private static int _numPlayers = 2;
+    private bool _gameOver;
+    private float _delayTime = 1.5f;
+    private WaitForSeconds _endDelay;
+    private MoveManager _moveManager;
+    private StickManager _stickManager;
+    private PlayerManager[] _playerManagers;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        SpawnAllPawns();
-        SpawnAllSticks();
+    #endregion
 
-        m_MoveManager.Setup();
-
-        m_EndWait = new WaitForSeconds(m_EndDelay);
-        StartCoroutine(GameLoop());
-    }
-
-    private void SpawnAllPawns()
-    {
-        for (int i = 0; i < m_Players.Length; ++i)
-        {
-            for (int j = 0; j < m_Players[i].m_Instances.Length; ++j)
-            {
-                m_Players[i].m_Instances[j] = Instantiate(m_PawnPrefab, m_Players[i].m_SpawnPoints[j].position,
-                    m_Players[i].m_SpawnPoints[j].rotation) as GameObject;
-            }
-            m_Players[i].m_PlayerNumber = i + 1;
-            m_Players[i].Setup();
-        }
-    }
-
-    private void SpawnAllSticks()
-    {
-        for (int i = 0; i < m_StickManager.m_Instances.Length; i++)
-        {
-            m_StickManager.m_Instances[i] = Instantiate(m_StickPrefab, m_StickManager.m_SpawnPoints[i].position,
-                m_StickManager.m_SpawnPoints[i].rotation) as GameObject;
-        }
-        m_StickManager.Setup();
-    }
+    #region Game Logic
 
     private IEnumerator GameLoop()
     {
@@ -59,7 +29,7 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
 
-        if (m_GameWinner != null)
+        if (!_gameOver)
         {
             SceneManager.LoadScene(0);
         }
@@ -78,12 +48,12 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundPlaying()
     {
         Debug.Log("RoundPlaying");
-        for (int i = 0; i < m_Players.Length; i++)
+        for (int i = 0; i < _numPlayers; i++)
         {
-            yield return StartCoroutine(TakeTurn(m_Players[i]));
+            yield return StartCoroutine(TakeTurn(_playerManagers[i]));
 
-            m_GameWinner = GetGameWinner();
-            if (m_GameWinner != null)
+            _gameOver = GetGameWinner();
+            if (!_gameOver)
             {
                 break;
             }
@@ -95,54 +65,73 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundEnding()
     {
         Debug.Log("RoundEnding");
-        yield return m_EndWait;
+        yield return _endDelay;
     }
 
     private IEnumerator TakeTurn(PlayerManager t_Player)
     {
-        Debug.Log("Player " + t_Player.m_PlayerNumber + " turn");
+        Debug.Log("Player " + t_Player.playerNumber + " turn");
         bool newRoll = true;
         while (newRoll)
         {
             yield return StartCoroutine(Rolling());
-            int score = m_StickManager.Score();
-            yield return StartCoroutine(Moving(t_Player.m_PlayerColor, score));
+            int score = _stickManager.Score();
+            yield return StartCoroutine(Moving(t_Player.playerColor, score));
             newRoll = (score == 1 || score == 4 || score == 6) ? true : false;
-            m_StickManager.Reset();
+            _stickManager.Reset();
             yield return null;
         }
-        yield return m_EndWait;
+        yield return _endDelay;
     }
 
     private IEnumerator Rolling()
     {
         Debug.Log("Rolling");
         yield return new WaitUntil(() => (Input.GetButtonDown("Fire1")));
-        m_StickManager.Throw();
-        yield return new WaitUntil(() => (m_StickManager.IsSleeping()));
+        _stickManager.Throw();
+        yield return new WaitUntil(() => (_stickManager.IsSleeping()));
     }
 
     private IEnumerator Moving(Color t_PlayerColor, int t_ThrowTotal)
     {
         Debug.Log("Moving");
-        while (!m_MoveManager.SelectionComplete())
+        while (!_moveManager.hasMoved)
         {
             yield return new WaitUntil(() => (Input.GetButtonDown("Fire1")));
-            m_MoveManager.Select(t_PlayerColor, t_ThrowTotal);
+            _moveManager.Select(t_PlayerColor, t_ThrowTotal);
         }
-        m_MoveManager.Reset();
+        _moveManager.Reset();
     }
 
-    private PlayerManager GetGameWinner()
+    private bool GetGameWinner()
     {
-        for (int i = 0; i < m_NumPlayers; i++)
+        for (int i = 0; i < _numPlayers; i++)
         {
-            if (m_MoveManager.HasWon(m_Players[i].m_PlayerColor) == true)
+            if (_moveManager.HasWon(_playerManagers[i].playerColor) == true)
             {
-                return m_Players[i];
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
+
+    #endregion
+
+    #region Monobehaviour Functions
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _stickManager = GetComponent<StickManager>();
+        _playerManagers = GetComponents<PlayerManager>();
+        _moveManager = GetComponent<MoveManager>();
+
+        _moveManager.ConfigureBoard();
+
+        _endDelay = new WaitForSeconds(_delayTime);
+        StartCoroutine(GameLoop());
+    }
+
+    #endregion
 }

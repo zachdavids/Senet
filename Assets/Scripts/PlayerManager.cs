@@ -1,33 +1,77 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class PlayerManager
+[Serializable]
+public class PlayerManager : MonoBehaviour
 {
-    public Color m_PlayerColor;
-    public Transform[] m_SpawnPoints = new Transform[m_NumPawns];
-    [HideInInspector] public int m_PlayerNumber;
-    [HideInInspector] public string m_ColoredPlayerText;
-    [HideInInspector] public GameObject[] m_Instances = new GameObject[m_NumPawns];
+    #region Attributes
 
-    private static int m_NumPawns = 5;
+    private static int _numPawns = 5;
 
-    public void Setup()
+    [SerializeField] private GameObject _pawnPrefab;
+    [SerializeField] private Transform[] _spawnPoints;
+
+    [SerializeField] private Color _playerColor;
+    public Color playerColor
     {
-        m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
+        get { return _playerColor; }
+        set { _playerColor = value; }
+    }
 
-        for (int i = 0; i < m_Instances.Length; i++)
+    [SerializeField] private int _playerNumber;
+
+    public int playerNumber
+    {
+        get { return _playerNumber; }
+        set { _playerNumber = value; }
+    }
+
+    private GameObject[] _instances;
+
+    public GameObject[] instances
+    {
+        get { return _instances; }
+        set { _instances = value; }
+    }
+
+    #endregion
+
+    #region Setup
+
+    private void SpawnPawns()
+    {
+        for (int i = 0; i < _numPawns; ++i)
         {
-            m_Instances[i].GetComponentInChildren<MeshRenderer>().material.color = m_PlayerColor;
+            _instances[i] = Instantiate(
+                _pawnPrefab, 
+                _spawnPoints[i].position,
+                _spawnPoints[i].rotation
+            );
+
+            _instances[i].GetComponentInChildren<MeshRenderer>().material.color = _playerColor;
         }
     }
 
     public void Reset()
     {
-        for (int i = 0; i < m_Instances.Length; ++i)
+        for (int i = 0; i < _instances.Length; ++i)
         {
-            m_Instances[i].transform.position = m_SpawnPoints[i].position;
+            _instances[i].transform.position = _spawnPoints[i].position;
         }
     }
+
+    #endregion
+
+    #region Monobehaviour Functions
+
+    void Start()
+    {
+        _instances = new GameObject[_numPawns];
+
+        SpawnPawns();
+    }
+
+    #endregion
 }
