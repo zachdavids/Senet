@@ -1,53 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public class PlayerManager
 {
-    #region Editable Fields
+    public Color m_PlayerColor;
+    public Transform[] m_SpawnPoints = new Transform[m_NumPawns];
+    [HideInInspector] public int m_PlayerNumber;
+    [HideInInspector] public string m_ColoredPlayerText;
+    [HideInInspector] public GameObject[] m_Instances = new GameObject[m_NumPawns];
 
-    private int _playerNumber;
-
-    public int playerNumber
-    {
-        get { return _playerNumber; }
-        set { _playerNumber = value; }
-    }
-
-    public Color _playerColor;
-
-    public Color playerColor
-    {
-        get { return _playerColor; }
-        set { _playerColor = value; }
-    }
-
-    #endregion
-
-    #region Setup
-
-    private static int _numPawns = 5;
-
-    [SerializeField] public Transform[] _spawnPoints = new Transform[_numPawns];
-    [HideInInspector] public GameObject[] _instances = new GameObject[_numPawns];
+    private static int m_NumPawns = 5;
 
     public void Setup()
     {
-        for (int i = 0; i < _instances.Length; i++)
+        m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
+
+        for (int i = 0; i < m_Instances.Length; i++)
         {
-            _instances[i].GetComponentInChildren<MeshRenderer>().material.color = playerColor;
+            m_Instances[i].GetComponentInChildren<MeshRenderer>().material.color = m_PlayerColor;
         }
     }
 
     public void Reset()
     {
-        for (int i = 0; i < _instances.Length; ++i)
+        for (int i = 0; i < m_Instances.Length; ++i)
         {
-            _instances[i].transform.position = _spawnPoints[i].position;
+            m_Instances[i].transform.position = m_SpawnPoints[i].position;
         }
     }
-
-    #endregion
 }

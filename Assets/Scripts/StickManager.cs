@@ -3,45 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public class StickManager
 {
-    #region Setup 
+    public Transform[] m_SpawnPoints = new Transform[m_NumSticks];
+    [HideInInspector] public GameObject[] m_Instances = new GameObject[m_NumSticks];
 
-    private static int _numSticks = 4;
-
-    [SerializeField] public Transform[] _spawnPoints = new Transform[_numSticks];
-    [HideInInspector] public GameObject[] _instances = new GameObject[_numSticks];
+    private static int m_NumSticks = 4;
 
     public void Setup()
     {
-        for (int i = 0; i < _instances.Length; i++)
+        for (int i = 0; i < m_Instances.Length; i++)
         {
-            Rigidbody rBody = _instances[i].GetComponent<Rigidbody>();
+            Rigidbody rBody = m_Instances[i].GetComponent<Rigidbody>();
             rBody.useGravity = false;
             rBody.maxAngularVelocity = 14.0f;
         }
     }
 
-    public void Reset()
-    {
-        for (int i = 0; i < _instances.Length; ++i)
-        {
-            _instances[i].GetComponent<Rigidbody>().useGravity = false;
-            _instances[i].transform.position = _spawnPoints[i].position;
-            _instances[i].transform.rotation = _spawnPoints[i].rotation;
-        }
-    }
-
-    #endregion
-
-    #region Throwing Logic
-
     public void Throw()
     {
-        for (int i = 0; i < _instances.Length; i++)
+        for (int i = 0; i < m_Instances.Length; i++)
         {
-            Rigidbody rBody = _instances[i].GetComponent<Rigidbody>();
+            Rigidbody rBody = m_Instances[i].GetComponent<Rigidbody>();
             rBody.useGravity = true;
             rBody.AddForce(0, 400, 0);
             rBody.AddTorque(UnityEngine.Random.Range(0f, 500f), UnityEngine.Random.Range(0f, 500f), UnityEngine.Random.Range(0f, 500f));
@@ -51,9 +35,9 @@ public class StickManager
     public int Score()
     {
         int total = 0;
-        for (int i = 0; i < _instances.Length; i++)
+        for (int i = 0; i < m_Instances.Length; i++)
         {
-            if (Vector3.Dot(_instances[i].transform.up, Vector3.up) <= 0.0f)
+            if (Vector3.Dot(m_Instances[i].transform.up, Vector3.up) <= 0.0f)
             {
                 total++;
             }
@@ -64,9 +48,9 @@ public class StickManager
 
     public bool IsSleeping()
     {
-        for (int i = 0; i < _instances.Length; ++i)
+        for (int i = 0; i < m_Instances.Length; ++i)
         {
-            if (_instances[i].GetComponent<Rigidbody>().IsSleeping() == false)
+            if (m_Instances[i].GetComponent<Rigidbody>().IsSleeping() == false)
             {
                 return false;
             }
@@ -75,5 +59,13 @@ public class StickManager
         return true;
     }
 
-    #endregion
+    public void Reset()
+    {
+        for (int i = 0; i < m_Instances.Length; ++i)
+        {
+            m_Instances[i].GetComponent<Rigidbody>().useGravity = false;
+            m_Instances[i].transform.position = m_SpawnPoints[i].position;
+            m_Instances[i].transform.rotation = m_SpawnPoints[i].rotation;
+        }
+    }
 }

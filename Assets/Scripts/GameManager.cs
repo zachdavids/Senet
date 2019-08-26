@@ -6,48 +6,53 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    #region Editable Attributes
-
-    [SerializeField] private Transform _discard;
-    [SerializeField] private GameObject m_PawnPrefab;
-    [SerializeField] private GameObject m_StickPrefab;
-
-    #endregion
-
-    #region Game Initialization
-
-    public PlayerManager[] m_Players = new PlayerManager[m_NumPlayers];
+    public GameObject m_PawnPrefab;
+    public GameObject m_StickPrefab;
     public StickManager m_StickManager;
+    public MoveManager m_MoveManager = new MoveManager();
+    public PlayerManager[] m_Players = new PlayerManager[m_NumPlayers];
+
+    private static int m_NumPlayers = 2;
+    private float m_StartDelay = 1.5f;
+    private float m_EndDelay = 1.5f;
+    private WaitForSeconds m_StartWait;
+    private WaitForSeconds m_EndWait;
+    private PlayerManager m_GameWinner;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        m_StartWait = new WaitForSeconds(m_StartDelay);
+        m_EndWait = new WaitForSeconds(m_EndDelay);
+        SpawnAllPawns();
+        SpawnAllSticks();
+        m_MoveManager.Setup();
+        StartCoroutine(GameLoop());
+    }
 
     private void SpawnAllPawns()
     {
         for (int i = 0; i < m_Players.Length; ++i)
         {
-            for (int j = 0; j < m_Players[i]._instances.Length; ++j)
+            for (int j = 0; j < m_Players[i].m_Instances.Length; ++j)
             {
-                m_Players[i]._instances[j] = Instantiate(m_PawnPrefab, m_Players[i]._spawnPoints[j].position,
-                    m_Players[i]._spawnPoints[j].rotation) as GameObject;
+                m_Players[i].m_Instances[j] = Instantiate(m_PawnPrefab, m_Players[i].m_SpawnPoints[j].position,
+                    m_Players[i].m_SpawnPoints[j].rotation) as GameObject;
             }
-            m_Players[i].playerNumber = i + 1;
+            m_Players[i].m_PlayerNumber = i + 1;
             m_Players[i].Setup();
         }
     }
 
     private void SpawnAllSticks()
     {
-        for (int i = 0; i < m_StickManager._instances.Length; i++)
+        for (int i = 0; i < m_StickManager.m_Instances.Length; i++)
         {
-            m_StickManager._instances[i] = Instantiate(m_StickPrefab, m_StickManager._spawnPoints[i].position,
-                m_StickManager._spawnPoints[i].rotation) as GameObject;
+            m_StickManager.m_Instances[i] = Instantiate(m_StickPrefab, m_StickManager.m_SpawnPoints[i].position,
+                m_StickManager.m_SpawnPoints[i].rotation) as GameObject;
         }
         m_StickManager.Setup();
     }
-
-    #endregion
-
-    #region Game Loop
-
-    private PlayerManager m_GameWinner;
 
     private IEnumerator GameLoop()
     {
@@ -96,13 +101,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator TakeTurn(PlayerManager t_Player)
     {
-        Debug.Log("Player " + t_Player.playerNumber + " turn");
+        Debug.Log("Player " + t_Player.m_PlayerNumber + " turn");
         bool newRoll = true;
         while (newRoll)
         {
             yield return StartCoroutine(Rolling());
             int score = m_StickManager.Score();
-            yield return StartCoroutine(Moving(t_Player.playerColor, score));
+            yield return StartCoroutine(Moving(t_Player.m_PlayerColor, score));
             newRoll = (score == 1 || score == 4 || score == 6) ? true : false;
             m_StickManager.Reset();
             yield return null;
@@ -121,7 +126,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator Moving(Color t_PlayerColor, int t_ThrowTotal)
     {
         Debug.Log("Moving");
-        while (!m_MoveManager.hasMoved)
+        while (!m_MoveManager.SelectionComplete())
         {
             yield return new WaitUntil(() => (Input.GetButtonDown("Fire1")));
             m_MoveManager.Select(t_PlayerColor, t_ThrowTotal);
@@ -133,7 +138,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_NumPlayers; i++)
         {
-            if (m_MoveManager.HasWon(m_Players[i].playerColor) == true)
+            if (m_MoveManager.HasWon(m_Players[i].m_PlayerColor) == true)
             {
                 return m_Players[i];
             }
@@ -141,29 +146,4 @@ public class GameManager : MonoBehaviour
 
         return null;
     }
-
-    #endregion
-
-    #region Movobehaviour Functions
-
-    private static int m_NumPlayers = 2;
-    private float m_EndDelay = 1.5f;
-    private WaitForSeconds m_EndWait;
-    private MoveManager m_MoveManager;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        m_EndWait = new WaitForSeconds(m_EndDelay);
-        SpawnAllPawns();
-        SpawnAllSticks();
-
-        m_MoveManager = new MoveManager();
-        m_MoveManager.discard = _discard;
-        m_MoveManager.Setup();
-
-        StartCoroutine(GameLoop());
-    }
-
-    #endregion
 }

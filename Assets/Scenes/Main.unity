@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 12
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -62,7 +62,6 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
-    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -77,16 +76,10 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
-    m_PVREnvironmentSampleCount: 500
-    m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 2
-    m_PVRDenoiserTypeDirect: 0
-    m_PVRDenoiserTypeIndirect: 0
-    m_PVRDenoiserTypeAO: 0
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVREnvironmentMIS: 0
+    m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -94,8 +87,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ExportTrainingData: 0
-    m_TrainingDataDestination: TrainingData
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -126,97 +118,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1470953382}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1428021494
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1428021496}
-  - component: {fileID: 1428021495}
-  m_Layer: 0
-  m_Name: Directional Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!108 &1428021495
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428021494}
-  m_Enabled: 1
-  serializedVersion: 9
-  m_Type: 1
-  m_Color: {r: 0.97814083, g: 1, b: 0.5518868, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 2
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &1428021496
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428021494}
-  m_LocalRotation: {x: 0.4247345, y: -0.23074515, z: 0.17370315, w: 0.85801196}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 54, y: -25, z: 10}
 --- !u!1001 &1470953382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,7 +128,7 @@ PrefabInstance:
     - target: {fileID: 2093482494067644807, guid: f3f61da839d2a864997f02521a92a56d,
         type: 3}
       propertyPath: m_Name
-      value: Board
+      value: LevelArt
       objectReference: {fileID: 0}
     - target: {fileID: 2093482494067644806, guid: f3f61da839d2a864997f02521a92a56d,
         type: 3}
@@ -267,7 +168,7 @@ PrefabInstance:
     - target: {fileID: 2093482494067644806, guid: f3f61da839d2a864997f02521a92a56d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2093482494067644806, guid: f3f61da839d2a864997f02521a92a56d,
         type: 3}
@@ -330,10 +231,9 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -473,7 +373,7 @@ PrefabInstance:
     - target: {fileID: 7839976719905818150, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7839976719905818150, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
@@ -492,52 +392,52 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[0]._spawnPoints.Array.data[0]
+      propertyPath: m_Players.Array.data[0].m_SpawnPoints.Array.data[0]
       value: 
       objectReference: {fileID: 1470953383}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[0]._spawnPoints.Array.data[1]
+      propertyPath: m_Players.Array.data[0].m_SpawnPoints.Array.data[1]
       value: 
       objectReference: {fileID: 4876452824478381167}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[0]._spawnPoints.Array.data[2]
+      propertyPath: m_Players.Array.data[0].m_SpawnPoints.Array.data[2]
       value: 
       objectReference: {fileID: 4876452822894390962}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[0]._spawnPoints.Array.data[3]
+      propertyPath: m_Players.Array.data[0].m_SpawnPoints.Array.data[3]
       value: 
       objectReference: {fileID: 4876452823721501270}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[0]._spawnPoints.Array.data[4]
+      propertyPath: m_Players.Array.data[0].m_SpawnPoints.Array.data[4]
       value: 
       objectReference: {fileID: 4876452823174703978}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[1]._spawnPoints.Array.data[0]
+      propertyPath: m_Players.Array.data[1].m_SpawnPoints.Array.data[0]
       value: 
       objectReference: {fileID: 787294112}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[1]._spawnPoints.Array.data[1]
+      propertyPath: m_Players.Array.data[1].m_SpawnPoints.Array.data[1]
       value: 
       objectReference: {fileID: 4876452824252941118}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[1]._spawnPoints.Array.data[2]
+      propertyPath: m_Players.Array.data[1].m_SpawnPoints.Array.data[2]
       value: 
       objectReference: {fileID: 4876452824747306785}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[1]._spawnPoints.Array.data[3]
+      propertyPath: m_Players.Array.data[1].m_SpawnPoints.Array.data[3]
       value: 
       objectReference: {fileID: 4876452823829114806}
     - target: {fileID: 7839976719905818151, guid: e40b24b087639db4a9bf46b40b5e6ac4,
         type: 3}
-      propertyPath: m_Players.Array.data[1]._spawnPoints.Array.data[4]
+      propertyPath: m_Players.Array.data[1].m_SpawnPoints.Array.data[4]
       value: 
       objectReference: {fileID: 4876452824834312033}
     m_RemovedComponents: []
